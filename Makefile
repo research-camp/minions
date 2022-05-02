@@ -7,3 +7,6 @@ run:
 # test server
 server-test:
 	curl -i localhost:8081
+# test proxy server
+proxy-test:
+	curl -i localhost:8080
