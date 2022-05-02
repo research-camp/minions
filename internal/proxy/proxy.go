@@ -2,6 +2,7 @@ package proxy
 
 import (
 	"fmt"
+	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -26,7 +27,7 @@ func New() {
 		req.RequestURI = ""
 
 		// send a request to the origin server
-		_, err := http.DefaultClient.Do(req)
+		originServerResponse, err := http.DefaultClient.Do(req)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)
 
@@ -34,6 +35,10 @@ func New() {
 
 			return
 		}
+
+		// return response to the client
+		rw.WriteHeader(http.StatusOK)
+		_, _ = io.Copy(rw, originServerResponse.Body)
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", reverseProxy))
