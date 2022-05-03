@@ -1,4 +1,4 @@
-package server
+package main
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 // New : creates a main server on port 8081
-func New() {
+func main() {
 	handler := http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		fmt.Printf("[origin server] received request at: %s\n", time.Now())
 
