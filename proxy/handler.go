@@ -3,6 +3,7 @@ package proxy
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -19,6 +20,15 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 		req.URL.Host = originServerURL.Host
 		req.URL.Scheme = originServerURL.Scheme
 		req.RequestURI = ""
+
+		if req.URL.Scheme != "http" && req.URL.Scheme != "https" {
+			msg := "unsupported protocol scheme " + req.URL.Scheme
+
+			http.Error(rw, msg, http.StatusBadRequest)
+			log.Println(msg)
+
+			return
+		}
 
 		// send a request to the origin server
 		originServerResponse, err := http.DefaultClient.Do(req)
