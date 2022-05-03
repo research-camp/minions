@@ -4,7 +4,6 @@ import (
 	"github.com/amirhnajafiz/xerox/internal/config"
 	"github.com/amirhnajafiz/xerox/internal/metric"
 	"github.com/amirhnajafiz/xerox/proxy"
-	"github.com/amirhnajafiz/xerox/server"
 )
 
 func main() {
@@ -16,8 +15,5 @@ func main() {
 	}
 
 	// starting a proxy server
-	go proxy.New(cfg.Proxy)
-
-	// starting a new server
-	server.New()
+	proxy.New(cfg.Proxy)
 }
