@@ -1,6 +1,7 @@
 package metric
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -28,11 +29,8 @@ func NewServer(cfg Config) Server {
 
 // Start creates and run a metric server for prometheus in new go routine.
 func (s Server) Start() {
-	if s.Srv == nil {
-		return
-	}
-
 	go func() {
+		fmt.Printf("Metrics enable at %s\n", s.Address)
 		if err := http.ListenAndServe(s.Address, s.Srv); err != nil {
 			panic(err)
 		}

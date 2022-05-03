@@ -13,7 +13,9 @@ import (
 func New() {
 	cfg := config.Load()
 
-	metric.NewServer(cfg.Metric).Start()
+	if cfg.Metric.Enable {
+		metric.NewServer(cfg.Metric).Start()
+	}
 
 	// forward client to the main server
 	originServerURL, err := url.Parse("http://127.0.0.1:8081")
