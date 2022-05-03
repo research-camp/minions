@@ -1,8 +1,8 @@
 package main
 
 import (
-	"amirhnajafiz/xerox/proxy"
-	"amirhnajafiz/xerox/server"
+	"github.com/amirhnajafiz/xerox/proxy"
+	"github.com/amirhnajafiz/xerox/server"
 )
 
 func main() {
