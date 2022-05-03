@@ -5,25 +5,22 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/amirhnajafiz/xerox/internal/config"
 	"github.com/amirhnajafiz/xerox/internal/metric"
 )
 
 // New : creates a new reverse proxy server on port 8080
-func New() {
-	cfg := config.Load()
-
-	if cfg.Metric.Enable {
-		metric.NewServer(cfg.Metric).Start()
+func New(cfg Config, mCfg metric.Config) {
+	if mCfg.Enable {
+		metric.NewServer(mCfg).Start()
 	}
 
 	// forward client to the main server
-	originServerURL, err := url.Parse(cfg.Proxy.BaseURL)
+	originServerURL, err := url.Parse(cfg.BaseURL)
 	if err != nil {
 		log.Fatal("invalid origin server URL")
 	}
 
 	reverseProxy := http.HandlerFunc(HandleRequest(originServerURL, metric.NewMetrics()))
 
-	log.Fatal(http.ListenAndServe(cfg.Proxy.Address, reverseProxy))
+	log.Fatal(http.ListenAndServe(cfg.Address, reverseProxy))
 }
