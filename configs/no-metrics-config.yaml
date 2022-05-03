@@ -1,0 +1,3 @@
+proxy:
+  address: ":8080"
+  base_url: ""

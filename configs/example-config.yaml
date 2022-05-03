@@ -1,0 +1,6 @@
+metric:
+  enable: true
+  host: ":1220"
+proxy:
+  address: ":8080"
+  base_url: ""
