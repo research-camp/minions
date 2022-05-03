@@ -13,6 +13,7 @@ import (
 type ReqHandFunc func(w http.ResponseWriter, r *http.Request)
 
 func HandleRequest(originServerURL *url.URL) ReqHandFunc {
+	// handle request method will return a proxy handler by forwarding our client
 	return func(rw http.ResponseWriter, req *http.Request) {
 		fmt.Printf("[reverse proxy server] received request at: %s\n", time.Now())
 
@@ -22,6 +23,7 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 		req.URL.Scheme = originServerURL.Scheme
 		req.RequestURI = ""
 
+		// supporting only http and https
 		if req.URL.Scheme != "http" && req.URL.Scheme != "https" {
 			msg := "unsupported protocol scheme " + req.URL.Scheme
 
@@ -31,8 +33,10 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 			return
 		}
 
-		DeleteHeaders(req.Header)
+		// deleting the hop to hop headers
+		DeleteHopHeaders(req.Header)
 
+		// appending host to x forward header in proxy server
 		if clientIP, _, err := net.SplitHostPort(req.RemoteAddr); err == nil {
 			AppendHostToXForwardHeader(req.Header, clientIP)
 		}
@@ -47,7 +51,9 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 			return
 		}
 
-		DeleteHeaders(originServerResponse.Header)
+		// deleting the hop to hop headers
+		DeleteHopHeaders(originServerResponse.Header)
+		// adding the response headers from origin server
 		CopyHeader(rw.Header(), originServerResponse.Header)
 
 		// return response to the client

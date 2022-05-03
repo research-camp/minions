@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-var headers = []string{
+var hopToHopHeaders = []string{
 	"Connection",
 	"Keep-Alive",
 	"Proxy-Authenticate",
@@ -24,8 +24,8 @@ func CopyHeader(dst, src http.Header) {
 	}
 }
 
-func DeleteHeaders(header http.Header) {
-	for _, h := range headers {
+func DeleteHopHeaders(header http.Header) {
+	for _, h := range hopToHopHeaders {
 		header.Del(h)
 	}
 }
