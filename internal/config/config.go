@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/amirhnajafiz/xerox/internal/metric"
 	"github.com/amirhnajafiz/xerox/proxy"
 	"github.com/knadh/koanf"
 	"github.com/knadh/koanf/parsers/yaml"
@@ -12,7 +13,8 @@ import (
 )
 
 type Config struct {
-	Proxy proxy.Config `koanf:"proxy"`
+	Metric metric.Config `koanf:"metric"`
+	Proxy  proxy.Config  `koanf:"proxy"`
 }
 
 func Load() Config {
