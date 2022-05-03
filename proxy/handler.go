@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io"
 	"log"
+	"net"
 	"net/http"
 	"net/url"
 	"time"
@@ -30,6 +31,12 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 			return
 		}
 
+		DeleteHeaders(req.Header)
+
+		if clientIP, _, err := net.SplitHostPort(req.RemoteAddr); err == nil {
+			AppendHostToXForwardHeader(req.Header, clientIP)
+		}
+
 		// send a request to the origin server
 		originServerResponse, err := http.DefaultClient.Do(req)
 		if err != nil {
@@ -39,6 +46,9 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 
 			return
 		}
+
+		DeleteHeaders(originServerResponse.Header)
+		CopyHeader(rw.Header(), originServerResponse.Header)
 
 		// return response to the client
 		rw.WriteHeader(http.StatusOK)
