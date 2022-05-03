@@ -18,12 +18,12 @@ func New() {
 	}
 
 	// forward client to the main server
-	originServerURL, err := url.Parse("http://127.0.0.1:8081")
+	originServerURL, err := url.Parse(cfg.Proxy.BaseURL)
 	if err != nil {
 		log.Fatal("invalid origin server URL")
 	}
 
 	reverseProxy := http.HandlerFunc(HandleRequest(originServerURL, metric.NewMetrics()))
 
-	log.Fatal(http.ListenAndServe(":8080", reverseProxy))
+	log.Fatal(http.ListenAndServe(cfg.Proxy.Address, reverseProxy))
 }
