@@ -12,7 +12,6 @@ import (
 // New : creates a new reverse proxy server on port 8080
 func New() {
 	cfg := config.Load()
-	mtc := metric.NewMetrics()
 
 	metric.NewServer(cfg.Metric).Start()
 
@@ -22,7 +21,7 @@ func New() {
 		log.Fatal("invalid origin server URL")
 	}
 
-	reverseProxy := http.HandlerFunc(HandleRequest(originServerURL))
+	reverseProxy := http.HandlerFunc(HandleRequest(originServerURL, metric.NewMetrics()))
 
 	log.Fatal(http.ListenAndServe(":8080", reverseProxy))
 }

@@ -8,14 +8,18 @@ import (
 	"net/http"
 	"net/url"
 	"time"
+
+	"github.com/amirhnajafiz/xerox/internal/metric"
 )
 
 type ReqHandFunc func(w http.ResponseWriter, r *http.Request)
 
-func HandleRequest(originServerURL *url.URL) ReqHandFunc {
+func HandleRequest(originServerURL *url.URL, mtc metric.Metrics) ReqHandFunc {
 	// handle request method will return a proxy handler by forwarding our client
 	return func(rw http.ResponseWriter, req *http.Request) {
 		fmt.Printf("[reverse proxy server] received request at: %s\n", time.Now())
+
+		mtc.TotalRequests.Add(1)
 
 		// set the parameters to forward our client to the main server
 		req.Host = originServerURL.Host
@@ -29,6 +33,8 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 
 			http.Error(rw, msg, http.StatusBadRequest)
 			log.Println(msg)
+
+			mtc.FailedRequests.Add(1)
 
 			return
 		}
@@ -48,6 +54,8 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 
 			_, _ = fmt.Fprint(rw, err)
 
+			mtc.FailedRequests.Add(1)
+
 			return
 		}
 
@@ -55,6 +63,8 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 		DeleteHopHeaders(originServerResponse.Header)
 		// adding the response headers from origin server
 		CopyHeader(rw.Header(), originServerResponse.Header)
+
+		mtc.SuccessfulRequests.Add(1)
 
 		// return response to the client
 		rw.WriteHeader(http.StatusOK)
