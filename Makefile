@@ -10,3 +10,6 @@ server-test:
 # test proxy server
 proxy-test:
 	curl -i localhost:8080
+# test server
+run-test-server:
+	go run server/server.go
