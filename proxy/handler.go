@@ -3,21 +3,21 @@ package proxy
 import (
 	"fmt"
 	"io"
-	"log"
 	"net"
 	"net/http"
 	"net/url"
 	"time"
 
 	"github.com/amirhnajafiz/xerox/internal/metric"
+	"go.uber.org/zap"
 )
 
 type ReqHandFunc func(w http.ResponseWriter, r *http.Request)
 
-func HandleRequest(originServerURL *url.URL, mtc metric.Metrics) ReqHandFunc {
+func HandleRequest(originServerURL *url.URL, logger *zap.Logger, mtc metric.Metrics) ReqHandFunc {
 	// handle request method will return a proxy handler by forwarding our client
 	return func(rw http.ResponseWriter, req *http.Request) {
-		fmt.Printf("[reverse proxy server] received request at: %s\n", time.Now())
+		logger.Info("[reverse proxy server] received request", zap.Time("time", time.Now()))
 
 		mtc.TotalRequests.Add(1)
 
@@ -29,10 +29,10 @@ func HandleRequest(originServerURL *url.URL, mtc metric.Metrics) ReqHandFunc {
 
 		// supporting only http and https
 		if req.URL.Scheme != "http" && req.URL.Scheme != "https" {
-			msg := "unsupported protocol scheme " + req.URL.Scheme
+			msg := "unsupported protocol schema " + req.URL.Scheme
 
 			http.Error(rw, msg, http.StatusBadRequest)
-			log.Println(msg)
+			logger.Error("unsupported protocol schema", zap.String("url", req.URL.Scheme))
 
 			mtc.FailedRequests.Add(1)
 
