@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 
+	"github.com/amirhnajafiz/xerox/internal/logger"
 	"github.com/amirhnajafiz/xerox/internal/metric"
 	"github.com/amirhnajafiz/xerox/proxy"
 	"github.com/knadh/koanf"
@@ -13,6 +14,7 @@ import (
 )
 
 type Config struct {
+	Logger logger.Config `koanf:"logger"`
 	Metric metric.Config `koanf:"metric"`
 	Proxy  proxy.Config  `koanf:"proxy"`
 }
