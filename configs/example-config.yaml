@@ -1,3 +1,5 @@
+logger:
+  level: "debug"
 metric:
   enable: true
   host: ":1220"

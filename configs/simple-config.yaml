@@ -1,5 +1,3 @@
-logger:
-  level: "debug"
 proxy:
   address: ":8080"
   base_url: ""
