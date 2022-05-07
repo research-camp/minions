@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  node-app:
+    container_name: xerox-container
+    build:
+      dockerfile: Dockerfile
+      target: dev
+    environment:
+      BASE_URL: "localhost:8081"
+    ports:
+      - "8080:8080"
