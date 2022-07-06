@@ -29,7 +29,7 @@ func NewProxyServer(target string, address string) Server {
 	// forward client to the main server
 	originServerURL, err := url.Parse(target)
 	if err != nil {
-		log.Fatal("invalid origin server URL")
+		log.Fatal(internal.ErrInvalidUrl)
 	}
 
 	// reverse proxy server initialize

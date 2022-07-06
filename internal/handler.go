@@ -23,7 +23,7 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 
 		// supporting only http and https
 		if req.URL.Scheme != "http" && req.URL.Scheme != "https" {
-			msg := "unsupported protocol schema " + req.URL.Scheme
+			msg := ErrUnsupportedProtocol + req.URL.Scheme
 
 			http.Error(rw, msg, http.StatusBadRequest)
 
