@@ -1,34 +1,39 @@
-# xerox
+<p align="center">
+    <img src="assets/logo.jpeg" width="300" alt="logo" />
+</p>
 
-Xerox is a proxy server implemented in Golang.
+<h1 align="center">
+    Xerox
+</h1>
 
-## How does it work?
-By creating a reverse proxy server, user request will go through
-our proxy server and the server will send that request to a base url
-that we set on the application configs, after that, server responses with
-the response from origin server.
+<p align="center">
+    A library for creating a proxy server.
+</p>
 
-## Run application
-You can run the application by docker:
+<p align="center">
+    <img src="https://img.shields.io/badge/Go-1.17+-00ADD8?style=for-the-badge&logo=go" alt="go version" />
+    <img src="https://img.shields.io/badge/Version-1.0.0-informational?style=for-the-badge&logo=none" alt="version" />
+</p>
+
+## How to use?
+Get the repository:
 ```shell
-docker-compose up -d
+go get github.com/amirhnajafiz/xerox
 ```
 
-You can set the base url address in the docker-compose file:
-```yaml
-environment:
-      BASE_URL: "[Your base url]"
+In your code, you have to set a target for proxy server and an address
+for your proxy server to get start on:
+```go
+package main
+
+import "github.com/amirhnajafiz/xerox"
+
+func main() {
+	// creating a proxy server on port 8080 and
+	// bind to localhost:8081
+	proxy := xerox.NewProxyServer("localhost:8081", "8080")
+
+	// starting the proxy server
+	proxy.Start()
+}
 ```
-
-The default base url is **localhost:8081** which is the test server.
-
-## Configs
-If you want to run the application, make sure to create the config.yaml file.
-You can check some application configs, in configs directory.
-
-```shell
-cp ./configs/[your file].yaml config.yaml
-```
-
-## Metrics
-You can check the application prometheus metrics on port _1220_ route _/metric_.
