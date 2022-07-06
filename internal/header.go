@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// hop to hop headers
 var hopToHopHeaders = []string{
 	"Connection",
 	"Keep-Alive",
@@ -16,7 +17,7 @@ var hopToHopHeaders = []string{
 	"Upgrade",
 }
 
-func CopyHeader(dst, src http.Header) {
+func copyHeader(dst, src http.Header) {
 	for k, vv := range src {
 		for _, v := range vv {
 			dst.Add(k, v)
@@ -24,15 +25,16 @@ func CopyHeader(dst, src http.Header) {
 	}
 }
 
-func DeleteHopHeaders(header http.Header) {
+func deleteHopHeaders(header http.Header) {
 	for _, h := range hopToHopHeaders {
 		header.Del(h)
 	}
 }
 
-func AppendHostToXForwardHeader(header http.Header, host string) {
+func appendHostToXProxy(header http.Header, host string) {
 	if prior, ok := header["X-Forwarded-For"]; ok {
 		host = strings.Join(prior, ", ") + ", " + host
 	}
+
 	header.Set("X-Forwarded-For", host)
 }
