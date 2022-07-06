@@ -1,4 +1,4 @@
-package proxy
+package internal
 
 import (
 	"fmt"
@@ -6,21 +6,13 @@ import (
 	"net"
 	"net/http"
 	"net/url"
-	"time"
-
-	"github.com/amirhnajafiz/xerox/internal/metric"
-	"go.uber.org/zap"
 )
 
 type ReqHandFunc func(w http.ResponseWriter, r *http.Request)
 
-func HandleRequest(originServerURL *url.URL, logger *zap.Logger, mtc metric.Metrics) ReqHandFunc {
+func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 	// handle request method will return a proxy handler by forwarding our client
 	return func(rw http.ResponseWriter, req *http.Request) {
-		logger.Info("[reverse proxy server] received request", zap.Time("time", time.Now()))
-
-		mtc.TotalRequests.Add(1)
-
 		// set the parameters to forward our client to the main server
 		req.Host = originServerURL.Host
 		req.URL.Host = originServerURL.Host
@@ -32,9 +24,6 @@ func HandleRequest(originServerURL *url.URL, logger *zap.Logger, mtc metric.Metr
 			msg := "unsupported protocol schema " + req.URL.Scheme
 
 			http.Error(rw, msg, http.StatusBadRequest)
-			logger.Error("unsupported protocol schema", zap.String("url", req.URL.Scheme))
-
-			mtc.FailedRequests.Add(1)
 
 			return
 		}
@@ -54,8 +43,6 @@ func HandleRequest(originServerURL *url.URL, logger *zap.Logger, mtc metric.Metr
 
 			_, _ = fmt.Fprint(rw, err)
 
-			mtc.FailedRequests.Add(1)
-
 			return
 		}
 
@@ -63,8 +50,6 @@ func HandleRequest(originServerURL *url.URL, logger *zap.Logger, mtc metric.Metr
 		DeleteHopHeaders(originServerResponse.Header)
 		// adding the response headers from origin server
 		CopyHeader(rw.Header(), originServerResponse.Header)
-
-		mtc.SuccessfulRequests.Add(1)
 
 		// return response to the client
 		rw.WriteHeader(http.StatusOK)

@@ -1,4 +1,4 @@
-package proxy
+package internal
 
 type Config struct {
 	Address string `koanf:"address"`
