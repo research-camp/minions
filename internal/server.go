@@ -41,7 +41,5 @@ func (s Server) GetInfo() string {
 
 // Start the proxy server
 func (s Server) Start() {
-	go func() {
-		log.Fatal(http.ListenAndServe(s.address, http.HandlerFunc(s.handler)))
-	}()
+	log.Fatal(http.ListenAndServe(s.address, http.HandlerFunc(s.handler)))
 }
