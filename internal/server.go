@@ -27,7 +27,7 @@ func New(target string, address string) Server {
 
 	// reverse proxy server initialize
 	return Server{
-		address:   address,
+		address:   ":" + address,
 		target:    originServerURL,
 		createdAt: time.Now(),
 		handler:   HandleRequest(originServerURL),
