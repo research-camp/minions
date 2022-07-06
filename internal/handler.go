@@ -8,8 +8,10 @@ import (
 	"net/url"
 )
 
+// ReqHandFunc for request handling
 type ReqHandFunc func(w http.ResponseWriter, r *http.Request)
 
+// HandleRequest for proxy request handling
 func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 	// handle request method will return a proxy handler by forwarding our client
 	return func(rw http.ResponseWriter, req *http.Request) {
@@ -29,11 +31,11 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 		}
 
 		// deleting the hop to hop headers
-		DeleteHopHeaders(req.Header)
+		deleteHopHeaders(req.Header)
 
 		// appending host to x forward header in proxy server
 		if clientIP, _, err := net.SplitHostPort(req.RemoteAddr); err == nil {
-			AppendHostToXForwardHeader(req.Header, clientIP)
+			appendHostToXProxy(req.Header, clientIP)
 		}
 
 		// send a request to the origin server
@@ -47,9 +49,9 @@ func HandleRequest(originServerURL *url.URL) ReqHandFunc {
 		}
 
 		// deleting the hop to hop headers
-		DeleteHopHeaders(originServerResponse.Header)
+		deleteHopHeaders(originServerResponse.Header)
 		// adding the response headers from origin server
-		CopyHeader(rw.Header(), originServerResponse.Header)
+		copyHeader(rw.Header(), originServerResponse.Header)
 
 		// return response to the client
 		rw.WriteHeader(http.StatusOK)
