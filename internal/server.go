@@ -4,17 +4,12 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"os"
 )
 
 // New : creates a new reverse proxy server on port 8080
-func New(cfg Config) {
+func New(target string, address string) {
 	// forward client to the main server
-	if bURL, ok := os.LookupEnv("BASE_URL"); ok {
-		cfg.BaseURL = bURL
-	}
-
-	originServerURL, err := url.Parse(cfg.BaseURL)
+	originServerURL, err := url.Parse(target)
 	if err != nil {
 		log.Fatal("invalid origin server URL")
 	}
@@ -22,5 +17,6 @@ func New(cfg Config) {
 	// reverse proxy server initialize
 	reverseProxy := http.HandlerFunc(HandleRequest(originServerURL))
 
-	log.Fatal(http.ListenAndServe(cfg.Address, reverseProxy).Error())
+	// creating a new server
+	log.Fatal(http.ListenAndServe(address, reverseProxy).Error())
 }
