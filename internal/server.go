@@ -20,7 +20,7 @@ func New(target string, address string) Server {
 	// forward client to the main server
 	originServerURL, err := url.Parse(target)
 	if err != nil {
-		log.Fatal(ErrInvalidUrl)
+		log.Fatal(errInvalidUrl)
 	}
 
 	// reverse proxy server initialize

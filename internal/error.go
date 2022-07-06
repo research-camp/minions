@@ -1,6 +1,6 @@
 package internal
 
 const (
-	ErrUnsupportedProtocol = "unsupported protocol schema"
-	ErrInvalidUrl          = "invalid origin server URL"
+	errUnsupportedProtocol = "unsupported protocol schema"
+	errInvalidUrl          = "invalid origin server URL"
 )
