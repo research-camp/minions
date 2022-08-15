@@ -20,5 +20,7 @@
 # goland
 .idea/
 
+.vscode/
+
 # configs
 config.yaml
