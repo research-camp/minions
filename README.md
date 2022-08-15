@@ -16,6 +16,9 @@
 </p>
 
 ## How to use?
+You can use **Xerox** in Golang application or using it with Docker.
+
+### Golang 
 Get the repository:
 ```shell
 go get github.com/amirhnajafiz/xerox
@@ -36,4 +39,10 @@ func main() {
 	// starting the proxy server
 	proxy.Start()
 }
+```
+
+### Docker 
+To use **Xerox** in docker container:
+```shell
+docker run -p 8080:8080 --env SERVER_PORT=8080 --env SERVER_TARGET=www.google.com amirhossein21/xerox:v1.0.1
 ```

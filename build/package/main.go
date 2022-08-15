@@ -10,11 +10,11 @@ import (
 func main() {
 	var (
 		target string
-		port   = "8080"
+		port   = ":8080"
 	)
 
 	if value, ok := os.LookupEnv("SERVER_PORT"); ok {
-		port = value
+		port = ":" + value
 	}
 
 	if value, ok := os.LookupEnv("SERVER_TARGET"); ok {
