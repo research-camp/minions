@@ -5,20 +5,19 @@ import (
 	"io"
 	"net"
 	"net/http"
-	"net/url"
 )
 
 // ReqHandFunc for request handling
 type ReqHandFunc func(w http.ResponseWriter, r *http.Request)
 
 // HandleRequest for proxy request handling
-func HandleRequest(originServerURL *url.URL) ReqHandFunc {
+func HandleRequest() ReqHandFunc {
 	// handle request method will return a proxy handler by forwarding our client
 	return func(rw http.ResponseWriter, req *http.Request) {
 		// set the parameters to forward our client to the main server
-		req.Host = originServerURL.Host
-		req.URL.Host = originServerURL.Host
-		req.URL.Scheme = originServerURL.Scheme
+		req.Host = ""
+		req.URL.Host = ""
+		req.URL.Scheme = ""
 		req.RequestURI = ""
 
 		// supporting only http and https

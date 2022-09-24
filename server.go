@@ -11,6 +11,6 @@ type Proxy interface {
 }
 
 // NewProxyServer creates a new reverse proxy server on port 8080
-func NewProxyServer(target string, address string) Proxy {
-	return internal.New(target, address)
+func NewProxyServer(address string) Proxy {
+	return internal.New(address)
 }
