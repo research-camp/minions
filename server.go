@@ -7,7 +7,6 @@ import (
 // Proxy type
 type Proxy interface {
 	Start()
-	GetInfo() string
 }
 
 // NewProxyServer creates a new reverse proxy server on port 8080

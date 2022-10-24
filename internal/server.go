@@ -1,7 +1,6 @@
 package internal
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -23,11 +22,6 @@ func New(address string) Server {
 		createdAt: time.Now(),
 		handler:   HandleRequest(),
 	}
-}
-
-// GetInfo returns the proxy server information
-func (s Server) GetInfo() string {
-	return fmt.Sprintf("[%v] proxy_server: %s\n", s.createdAt, s.address)
 }
 
 // Start the proxy server

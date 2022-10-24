@@ -15,7 +15,7 @@ func main() {
 		port = ":" + value
 	}
 
-	proxy := xerox.NewProxyServer(port)
+	proxy := xerox.NewProxyServer(port, "")
 
 	// starting the proxy server
 	proxy.Start()
