@@ -7,8 +7,6 @@ import (
 	"syscall"
 
 	"github.com/amirhnajafiz/xerox/internal"
-
-	"github.com/songgao/water"
 )
 
 func main() {
@@ -32,11 +30,18 @@ func main() {
 	}
 
 	// closing tunnel after the application is closed
-	defer func(tun *water.Interface) {
+	defer func() {
 		if er := tun.Close(); er != nil {
 			panic(er)
 		}
-	}(tun)
+	}()
+
+	// reading packets from tunnel interface
+	go func() {
+		if er := internal.ReadFromInterface(tun); er != nil {
+			panic(er)
+		}
+	}()
 
 	// waiting for interrupt signal
 	<-done
