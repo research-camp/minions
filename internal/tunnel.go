@@ -9,12 +9,12 @@ import (
 
 const (
 	// name of the tunnel
-	tunnel = "tun0"
+	tunnel = "utun7"
 )
 
-// createNewTunnel
+// CreateNewTunnel
 // generates a new water tun interface.
-func createNewTunnel() (*water.Interface, error) {
+func CreateNewTunnel() (*water.Interface, error) {
 	// water configs
 	config := water.Config{
 		DeviceType: water.TUN,
