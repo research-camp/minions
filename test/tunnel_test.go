@@ -2,11 +2,12 @@ package test
 
 import (
 	"log"
+	"testing"
 
 	"github.com/songgao/water"
 )
 
-func TestTunnel() {
+func TestTunnel(_ *testing.T) {
 	ifce, err := water.New(water.Config{
 		DeviceType: water.TUN,
 	})
@@ -22,6 +23,7 @@ func TestTunnel() {
 		if err != nil {
 			log.Fatal(err)
 		}
+
 		log.Printf("Packet Received: % x\n", packet[:n])
 	}
 }
