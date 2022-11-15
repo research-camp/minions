@@ -27,6 +27,11 @@ func CreateNewTunnel() (*water.Interface, error) {
 		return nil, fmt.Errorf("error while creating a tun interface: %v\n", err)
 	}
 
+	// prepare network configurations for interface
+	if er := prepareNetworkConfigs(tunnel); er != nil {
+		return nil, fmt.Errorf("failed to set interface network configurations: %v\n", er)
+	}
+
 	log.Printf("tunnel created with name: %s\n", inf.Name())
 
 	return inf, err
