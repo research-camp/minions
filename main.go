@@ -15,12 +15,13 @@ func main() {
 		panic(err)
 	}
 
+	// closing tunnel after the application is closed
 	defer func(tun *water.Interface) {
-		err := tun.Close()
-		if err != nil {
-			panic(err)
+		if er := tun.Close(); er != nil {
+			panic(er)
 		}
 	}(tun)
 
+	// busy waiting
 	time.Sleep(10 * time.Minute)
 }

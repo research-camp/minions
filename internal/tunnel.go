@@ -9,7 +9,7 @@ import (
 
 const (
 	// name of the tunnel
-	tunnel = "utun7"
+	tunnel = "utun2"
 )
 
 // CreateNewTunnel
