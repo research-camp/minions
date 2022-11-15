@@ -1,7 +1,10 @@
 package main
 
 import (
-	"time"
+	"log"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/amirhnajafiz/xerox/internal"
 
@@ -9,6 +12,19 @@ import (
 )
 
 func main() {
+	// creating two channels for application termination
+	sigs := make(chan os.Signal, 1)
+	done := make(chan bool, 1)
+
+	// notifying signal
+	signal.Notify(sigs, syscall.SIGINT, syscall.SIGTERM)
+
+	// waiting for done signal
+	go func() {
+		<-sigs
+		done <- true
+	}()
+
 	// testing our tunnel building
 	tun, err := internal.CreateNewTunnel()
 	if err != nil {
@@ -22,6 +38,8 @@ func main() {
 		}
 	}(tun)
 
-	// busy waiting
-	time.Sleep(10 * time.Minute)
+	// waiting for interrupt signal
+	<-done
+
+	log.Println("Exiting...")
 }
