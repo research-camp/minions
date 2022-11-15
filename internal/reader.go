@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/songgao/water"
+	"golang.org/x/net/ipv4"
 )
 
 // ReadFromInterface
@@ -20,11 +21,20 @@ func ReadFromInterface(inf *water.Interface) error {
 
 	// start reading from interface
 	for {
+		// reading packet
 		n, err := r.Read(packet)
 		if err != nil {
 			return fmt.Errorf("failed to read packets: %s\n", err)
 		}
 
-		log.Printf("got packet: %v\n", packet[:n])
+		// parsing header
+		hdr, err := ipv4.ParseHeader(packet[:n])
+		if err != nil {
+			log.Printf("error while parsing ip header: %v", err)
+
+			continue
+		}
+
+		log.Printf("got packet: %+v\n", hdr)
 	}
 }
