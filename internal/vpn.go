@@ -5,9 +5,13 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+
+	"github.com/amirhnajafiz/xerox"
 )
 
-func NewVPN() {
+type vpn struct{}
+
+func (v *vpn) Run() error {
 	// creating two channels for application termination
 	sigs := make(chan os.Signal, 1)
 	done := make(chan bool, 1)
@@ -24,7 +28,7 @@ func NewVPN() {
 	// testing our tunnel building
 	tun, err := createNewTunnel()
 	if err != nil {
-		panic(err)
+		return err
 	}
 
 	// closing tunnel after the application is closed
@@ -45,4 +49,10 @@ func NewVPN() {
 	<-done
 
 	log.Println("Exiting...")
+
+	return nil
+}
+
+func NewVPN() xerox.VPN {
+	return &vpn{}
 }
