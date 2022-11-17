@@ -7,9 +7,9 @@ import (
 	"github.com/songgao/water"
 )
 
-// CreateNewTunnel
+// createNewTunnel
 // generates a new water tun interface.
-func CreateNewTunnel() (*water.Interface, error) {
+func createNewTunnel() (*water.Interface, error) {
 	// creating a new tunnel
 	inf, err := water.New(water.Config{
 		DeviceType: water.TUN,

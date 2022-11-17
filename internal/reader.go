@@ -9,10 +9,10 @@ import (
 	"golang.org/x/net/ipv4"
 )
 
-// ReadFromInterface
+// readFromInterface
 // reads packet from the tunnel that
 // we just created.
-func ReadFromInterface(inf *water.Interface) error {
+func readFromInterface(inf *water.Interface) error {
 	// creating a new reader
 	r := bufio.NewReader(inf)
 

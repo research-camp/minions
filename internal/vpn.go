@@ -22,7 +22,7 @@ func NewVPN() {
 	}()
 
 	// testing our tunnel building
-	tun, err := CreateNewTunnel()
+	tun, err := createNewTunnel()
 	if err != nil {
 		panic(err)
 	}
@@ -36,7 +36,7 @@ func NewVPN() {
 
 	// reading packets from tunnel interface
 	go func() {
-		if er := ReadFromInterface(tun); er != nil {
+		if er := readFromInterface(tun); er != nil {
 			panic(er)
 		}
 	}()
