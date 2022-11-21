@@ -9,7 +9,12 @@ import (
 )
 
 // SSHAgent
-// manages to create the ssh auth method with sshAuth parameter.
+// is a program that runs during user session in *nix system.
+// It stores the private keys in an encrypted form.
+// Because typing the passphrase can be tedious, many users would prefer to use it to store their private keys.
+// You can obtain all stored keys via sshAuth variable which stores the SSH agent unix socket.
+// We should access the keys by calling net.Dial and then instance an agent client used
+// by ssh.PublicKeysCallback factory auth method.
 func SSHAgent(sshAuth string) ssh.AuthMethod {
 	if sshAgent, err := net.Dial("unix", sshAuth); err == nil {
 		return ssh.PublicKeysCallback(agent.NewClient(sshAgent).Signers)
