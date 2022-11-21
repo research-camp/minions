@@ -8,6 +8,10 @@ import (
 	"golang.org/x/crypto/ssh"
 )
 
+// SSHTunnel
+// The client is connecting to local endpoint.
+// Then the server endpoint mediates between local endpoint and remote endpoint.
+// The algorithm is encapsulated in SSHTunnel struct.
 type SSHTunnel struct {
 	Local  *endpoint
 	Server *endpoint
@@ -33,6 +37,9 @@ func (tunnel *SSHTunnel) Start() error {
 	}
 }
 
+// Port forwarding is processed by establishing an SSH connection to the intermediate server.
+// When we are connected to the intermediate server, we are able to access the target server.
+// The data transfer between the client and the remote server is processed by io.Copy function in forward method.
 func (tunnel *SSHTunnel) forward(localConn net.Conn) {
 	serverConn, err := ssh.Dial("tcp", tunnel.Server.string(), tunnel.Config)
 	if err != nil {
