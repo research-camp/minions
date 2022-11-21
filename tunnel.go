@@ -13,16 +13,16 @@ import (
 // Then the server endpoint mediates between local endpoint and remote endpoint.
 // The algorithm is encapsulated in SSHTunnel struct.
 type SSHTunnel struct {
-	Local  *endpoint
-	Server *endpoint
-	Remote *endpoint
+	Local  *Endpoint
+	Server *Endpoint
+	Remote *Endpoint
 
 	Config *ssh.ClientConfig
 }
 
 func (tunnel *SSHTunnel) Start() error {
 	// creating a listener based on local server
-	listener, err := net.Listen("tcp", tunnel.Local.string())
+	listener, err := net.Listen("tcp", tunnel.Local.String())
 	if err != nil {
 		return err
 	}
@@ -50,7 +50,7 @@ func (tunnel *SSHTunnel) Start() error {
 // The data transfer between the client and the remote server is processed by io.Copy function in forward method.
 func (tunnel *SSHTunnel) forward(localConn net.Conn) {
 	// creating intermediate server connection
-	serverConn, err := ssh.Dial("tcp", tunnel.Server.string(), tunnel.Config)
+	serverConn, err := ssh.Dial("tcp", tunnel.Server.String(), tunnel.Config)
 	if err != nil {
 		log.Printf("intermediate server dial error:\n\t%v\n", err)
 
@@ -58,7 +58,7 @@ func (tunnel *SSHTunnel) forward(localConn net.Conn) {
 	}
 
 	// creating remove server connection
-	remoteConn, err := serverConn.Dial("tcp", tunnel.Remote.string())
+	remoteConn, err := serverConn.Dial("tcp", tunnel.Remote.String())
 	if err != nil {
 		log.Printf("remote server dial error:\n\t%v\n", err)
 
