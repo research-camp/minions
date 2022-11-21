@@ -9,15 +9,15 @@ import (
 )
 
 type SSHTunnel struct {
-	Local  *Endpoint
-	Server *Endpoint
-	Remote *Endpoint
+	Local  *endpoint
+	Server *endpoint
+	Remote *endpoint
 
 	Config *ssh.ClientConfig
 }
 
 func (tunnel *SSHTunnel) Start() error {
-	listener, err := net.Listen("tcp", tunnel.Local.String())
+	listener, err := net.Listen("tcp", tunnel.Local.string())
 	if err != nil {
 		return err
 	}
@@ -34,13 +34,13 @@ func (tunnel *SSHTunnel) Start() error {
 }
 
 func (tunnel *SSHTunnel) forward(localConn net.Conn) {
-	serverConn, err := ssh.Dial("tcp", tunnel.Server.String(), tunnel.Config)
+	serverConn, err := ssh.Dial("tcp", tunnel.Server.string(), tunnel.Config)
 	if err != nil {
 		fmt.Printf("Server dial error: %s\n", err)
 		return
 	}
 
-	remoteConn, err := serverConn.Dial("tcp", tunnel.Remote.String())
+	remoteConn, err := serverConn.Dial("tcp", tunnel.Remote.string())
 	if err != nil {
 		fmt.Printf("Remote dial error: %s\n", err)
 		return
