@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// endpoint
+// Endpoint
 // The tunneling protocol allows a network
 // user to access or provide a network service that the
 // underlying network does not support or provide directly.
@@ -13,14 +13,14 @@ import (
 // - local server
 // - target server
 // each server can be represented by the following struct.
-type endpoint struct {
+type Endpoint struct {
 	// server host address
-	host string
+	Host string
 	// server port
-	port int
+	Port int
 }
 
 // returns the string of our endpoint.
-func (endpoint *endpoint) string() string {
-	return fmt.Sprintf("%s:%d", endpoint.host, endpoint.port)
+func (endpoint *Endpoint) String() string {
+	return fmt.Sprintf("%s:%d", endpoint.Host, endpoint.Port)
 }

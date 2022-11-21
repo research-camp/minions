@@ -1,8 +1,8 @@
 package xerox
 
 import (
-	"fmt"
 	"io"
+	"log"
 	"net"
 
 	"golang.org/x/crypto/ssh"
@@ -21,18 +21,26 @@ type SSHTunnel struct {
 }
 
 func (tunnel *SSHTunnel) Start() error {
+	// creating a listener based on local server
 	listener, err := net.Listen("tcp", tunnel.Local.string())
 	if err != nil {
 		return err
 	}
-	defer listener.Close()
+	defer func() {
+		// closing local server
+		if er := listener.Close(); er != nil {
+			log.Printf("ssh tunnel failed to close:\n\t%v\n", er)
+		}
+	}()
 
 	for {
-		conn, err := listener.Accept()
-		if err != nil {
-			return err
+		// accepting clients on local server
+		conn, er := listener.Accept()
+		if er != nil {
+			return er
 		}
 
+		// forward client packets to intermediate server
 		go tunnel.forward(conn)
 	}
 }
@@ -41,28 +49,43 @@ func (tunnel *SSHTunnel) Start() error {
 // When we are connected to the intermediate server, we are able to access the target server.
 // The data transfer between the client and the remote server is processed by io.Copy function in forward method.
 func (tunnel *SSHTunnel) forward(localConn net.Conn) {
+	// creating intermediate server connection
 	serverConn, err := ssh.Dial("tcp", tunnel.Server.string(), tunnel.Config)
 	if err != nil {
-		fmt.Printf("Server dial error: %s\n", err)
+		log.Printf("intermediate server dial error:\n\t%v\n", err)
+
 		return
 	}
 
+	// creating remove server connection
 	remoteConn, err := serverConn.Dial("tcp", tunnel.Remote.string())
 	if err != nil {
-		fmt.Printf("Remote dial error: %s\n", err)
+		log.Printf("remote server dial error:\n\t%v\n", err)
+
 		return
 	}
 
+	// connecting two pipelines for transferring packets between two servers
 	copyConn := func(writer, reader net.Conn) {
-		defer writer.Close()
-		defer reader.Close()
+		// closing pipelines
+		defer func() {
+			if e := writer.Close(); e != nil {
+				log.Printf("writer pipeline failed to close:\n\t%v\n", e)
+			}
+		}()
+		defer func() {
+			if e := reader.Close(); e != nil {
+				log.Printf("reader pipeline failed to close:\n\t%v\n", e)
+			}
+		}()
 
-		_, err := io.Copy(writer, reader)
-		if err != nil {
-			fmt.Printf("io.Copy error: %s", err)
+		// using io.Copy to connect two pipelines
+		if _, er := io.Copy(writer, reader); er != nil {
+			log.Printf("io.Copy for creating pipeline error:\n\t%v\n", er)
 		}
 	}
 
+	// starting pipelines
 	go copyConn(localConn, remoteConn)
 	go copyConn(remoteConn, localConn)
 }
