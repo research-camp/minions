@@ -15,12 +15,12 @@ import (
 // each server can be represented by the following struct.
 type endpoint struct {
 	// server host address
-	Host string
+	host string
 	// server port
-	Port int
+	port int
 }
 
 // returns the string of our endpoint.
 func (endpoint *endpoint) string() string {
-	return fmt.Sprintf("%s:%d", endpoint.Host, endpoint.Port)
+	return fmt.Sprintf("%s:%d", endpoint.host, endpoint.port)
 }
