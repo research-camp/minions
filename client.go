@@ -51,6 +51,8 @@ func (client *SSHClient) Connect() error {
 	return nil
 }
 
+// RunCommand
+// executes commands.
 func (client *SSHClient) RunCommand(cmd *SSHCommand) error {
 	if err := client.prepareCommand(cmd); err != nil {
 		return err
@@ -59,6 +61,12 @@ func (client *SSHClient) RunCommand(cmd *SSHCommand) error {
 	return client.session.Run(cmd.Path)
 }
 
+// To attach our os.Stdin, os.Stdout and os.Stderr to remote command we should open pipes between the
+// local process and remote process.
+// Fortunately, ssh.Session object provides that out of the box by
+// invoking session.StdinPipe(), session.StdoutPipe() and session.StdoutErr() functions.
+// Then we should asynchronously copy the end of the pipes to the right file descriptors by using
+// go routines and os.Copy function.
 func (client *SSHClient) prepareCommand(cmd *SSHCommand) error {
 	for _, env := range cmd.Env {
 		variable := strings.Split(env, "=")
