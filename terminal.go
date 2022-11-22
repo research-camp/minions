@@ -1,9 +1,9 @@
 package xerox
 
 type SSHTerminal struct {
-	Echo             int
-	TtyOpInputSpeed  int
-	TtyOpOutputSpeed int
+	Echo             uint32
+	TtyOpInputSpeed  uint32
+	TtyOpOutputSpeed uint32
 	Columns          int
 	Rows             int
 }

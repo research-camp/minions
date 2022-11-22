@@ -11,9 +11,10 @@ import (
 // Every SSH connection requires an ssh.ClientConfig object that defines configuration options such as authentication.
 // Session is one of the parameters that acts as an entry point to the remote terminal.
 type SSHClient struct {
-	Server  *Endpoint
-	Config  *ssh.ClientConfig
-	Session *ssh.Session
+	Server         *Endpoint
+	Config         *ssh.ClientConfig
+	TerminalConfig *SSHTerminal
+	session        *ssh.Session
 }
 
 // Connect
@@ -31,7 +32,19 @@ func (client *SSHClient) Connect() error {
 		return fmt.Errorf("opening session failed:\n\t%v\n", err)
 	}
 
-	client.Session = session
+	// building terminal modes
+	modes := ssh.TerminalModes{
+		ssh.ECHO:          client.TerminalConfig.Echo,
+		ssh.TTY_OP_ISPEED: client.TerminalConfig.TtyOpInputSpeed,
+		ssh.TTY_OP_OSPEED: client.TerminalConfig.TtyOpOutputSpeed,
+	}
+
+	// registering terminal
+	if er := session.RequestPty("xterm", client.TerminalConfig.Rows, client.TerminalConfig.Columns, modes); er != nil {
+		return fmt.Errorf("cannot request for virtual terminal:\n\t%v\n", er)
+	}
+
+	client.session = session
 
 	return nil
 }
