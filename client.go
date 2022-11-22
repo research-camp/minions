@@ -51,6 +51,14 @@ func (client *SSHClient) Connect() error {
 	return nil
 }
 
+func (client *SSHClient) RunCommand(cmd *SSHCommand) error {
+	if err := client.prepareCommand(cmd); err != nil {
+		return err
+	}
+
+	return client.session.Run(cmd.Path)
+}
+
 func (client *SSHClient) prepareCommand(cmd *SSHCommand) error {
 	for _, env := range cmd.Env {
 		variable := strings.Split(env, "=")
