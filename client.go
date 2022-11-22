@@ -2,6 +2,8 @@ package xerox
 
 import (
 	"fmt"
+	"io"
+	"strings"
 
 	"golang.org/x/crypto/ssh"
 )
@@ -45,6 +47,45 @@ func (client *SSHClient) Connect() error {
 	}
 
 	client.session = session
+
+	return nil
+}
+
+func (client *SSHClient) prepareCommand(cmd *SSHCommand) error {
+	for _, env := range cmd.Env {
+		variable := strings.Split(env, "=")
+		if len(variable) != 2 {
+			continue
+		}
+
+		if err := client.session.Setenv(variable[0], variable[1]); err != nil {
+			return err
+		}
+	}
+
+	if cmd.Stdin != nil {
+		stdin, err := client.session.StdinPipe()
+		if err != nil {
+			return fmt.Errorf("Unable to setup stdin for session: %v", err)
+		}
+		go io.Copy(stdin, cmd.Stdin)
+	}
+
+	if cmd.Stdout != nil {
+		stdout, err := client.session.StdoutPipe()
+		if err != nil {
+			return fmt.Errorf("Unable to setup stdout for session: %v", err)
+		}
+		go io.Copy(cmd.Stdout, stdout)
+	}
+
+	if cmd.Stderr != nil {
+		stderr, err := client.session.StderrPipe()
+		if err != nil {
+			return fmt.Errorf("Unable to setup stderr for session: %v", err)
+		}
+		go io.Copy(cmd.Stderr, stderr)
+	}
 
 	return nil
 }
