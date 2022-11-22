@@ -59,31 +59,34 @@ func (client *SSHClient) prepareCommand(cmd *SSHCommand) error {
 		}
 
 		if err := client.session.Setenv(variable[0], variable[1]); err != nil {
-			return err
+			return fmt.Errorf("setting env variable failed:\n\t%v\n", err)
 		}
 	}
 
 	if cmd.Stdin != nil {
 		stdin, err := client.session.StdinPipe()
 		if err != nil {
-			return fmt.Errorf("Unable to setup stdin for session: %v", err)
+			return fmt.Errorf("failed to setup stdin for session:\n\t%v\n", err)
 		}
+
 		go io.Copy(stdin, cmd.Stdin)
 	}
 
 	if cmd.Stdout != nil {
 		stdout, err := client.session.StdoutPipe()
 		if err != nil {
-			return fmt.Errorf("Unable to setup stdout for session: %v", err)
+			return fmt.Errorf("failed to setup stdout for session:\n\t%v\n", err)
 		}
+
 		go io.Copy(cmd.Stdout, stdout)
 	}
 
 	if cmd.Stderr != nil {
 		stderr, err := client.session.StderrPipe()
 		if err != nil {
-			return fmt.Errorf("Unable to setup stderr for session: %v", err)
+			return fmt.Errorf("failed to setup stderr for session:\n\t%v\n", err)
 		}
+
 		go io.Copy(cmd.Stderr, stderr)
 	}
 
