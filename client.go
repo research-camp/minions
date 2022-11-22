@@ -39,9 +39,9 @@ func (client *SSHClient) Connect() error {
 		ssh.TTY_OP_OSPEED: client.TerminalConfig.TtyOpOutputSpeed,
 	}
 
-	// registering terminal
+	// registering pseudo terminal
 	if er := session.RequestPty("xterm", client.TerminalConfig.Rows, client.TerminalConfig.Columns, modes); er != nil {
-		return fmt.Errorf("cannot request for virtual terminal:\n\t%v\n", er)
+		return fmt.Errorf("cannot request for pseudo terminal:\n\t%v\n", er)
 	}
 
 	client.session = session
