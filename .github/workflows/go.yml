@@ -1,8 +1,9 @@
 name: Xerox build workflow
 
 on:
-  tag:
-    version: "v*.*.*"
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   build:
