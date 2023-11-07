@@ -22,3 +22,11 @@ func New(cfg Config) (*Storage, error) {
 		client: client,
 	}, nil
 }
+
+func (s Storage) Put(name string, path string) error {
+	return nil
+}
+
+func (s Storage) Get(name string) (string, error) {
+	return "", nil
+}
