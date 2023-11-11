@@ -3,6 +3,7 @@ package cmd
 import (
 	"github.com/amirhnajafiz/minions/internal/config"
 	"github.com/amirhnajafiz/minions/internal/http/minion"
+	"log"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
@@ -28,4 +29,8 @@ func (m Minion) main() {
 
 	app.Get("/download", h.Download)
 	app.Post("/upload", h.Upload)
+
+	if err := app.Listen(":80"); err != nil {
+		log.Fatal(err)
+	}
 }

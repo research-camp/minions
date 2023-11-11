@@ -1,8 +1,12 @@
 package cmd
 
 import (
-	"github.com/amirhnajafiz/minions/internal/config"
+	"log"
 
+	"github.com/amirhnajafiz/minions/internal/config"
+	"github.com/amirhnajafiz/minions/internal/http/router"
+
+	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
 )
 
@@ -20,5 +24,14 @@ func (r Router) Command() *cobra.Command {
 }
 
 func (r Router) main() {
+	app := fiber.New()
 
+	h := router.Handler{}
+
+	app.Get("/get", h.Get)
+	app.Post("/put", h.Put)
+
+	if err := app.Listen(":80"); err != nil {
+		log.Fatal(err)
+	}
 }
