@@ -27,7 +27,7 @@ func New(cfg Config) (*Storage, error) {
 	}, nil
 }
 
-func (s Storage) Put(name string, path string) error {
+func (s Storage) Put(name, path string) error {
 	ctx := context.Background()
 
 	_, err := s.client.FPutObject(ctx, s.cfg.Bucket, name, path, minio.PutObjectOptions{ContentType: "application/octet-stream"})
@@ -35,6 +35,8 @@ func (s Storage) Put(name string, path string) error {
 	return err
 }
 
-func (s Storage) Get(name string) (string, error) {
-	return "", nil
+func (s Storage) Get(name, path string) error {
+	ctx := context.Background()
+
+	return s.client.FGetObject(ctx, s.cfg.Bucket, name, path, minio.GetObjectOptions{})
 }
