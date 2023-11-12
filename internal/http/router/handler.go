@@ -1,8 +1,14 @@
 package router
 
-import "github.com/gofiber/fiber/v2"
+import (
+	"github.com/amirhnajafiz/minions/internal/config"
 
-type Handler struct{}
+	"github.com/gofiber/fiber/v2"
+)
+
+type Handler struct {
+	Cfg config.RouterConfig
+}
 
 func (h Handler) Get(ctx *fiber.Ctx) error {
 	return nil
