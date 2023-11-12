@@ -11,7 +11,7 @@ import (
 )
 
 type Router struct {
-	Cfg config.Config
+	Cfg config.RouterConfig
 }
 
 func (r Router) Command() *cobra.Command {

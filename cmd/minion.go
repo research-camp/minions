@@ -10,7 +10,7 @@ import (
 )
 
 type Minion struct {
-	Cfg config.Config
+	Cfg config.MinionConfig
 }
 
 func (m Minion) Command() *cobra.Command {
