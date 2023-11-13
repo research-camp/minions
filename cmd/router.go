@@ -2,11 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/amirhnajafiz/minions/internal/metrics"
 	"log"
 
 	"github.com/amirhnajafiz/minions/internal/config"
 	"github.com/amirhnajafiz/minions/internal/http/router"
+	"github.com/amirhnajafiz/minions/internal/metrics"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
@@ -40,6 +40,9 @@ func (r Router) main() {
 		Metrics: &m,
 	}
 
+	app.Get("/health", func(ctx *fiber.Ctx) error {
+		return ctx.SendStatus(fiber.StatusOK)
+	})
 	app.Get("/get", h.Get)
 	app.Post("/put", h.Put)
 

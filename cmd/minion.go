@@ -41,6 +41,9 @@ func (m Minion) main() {
 		MinIO: client,
 	}
 
+	app.Get("/health", func(ctx *fiber.Ctx) error {
+		return ctx.SendStatus(fiber.StatusOK)
+	})
 	app.Get("/download", h.Download)
 	app.Post("/upload", h.Upload)
 
