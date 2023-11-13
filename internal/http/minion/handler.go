@@ -2,6 +2,7 @@ package minion
 
 import (
 	"fmt"
+	"log"
 	"os"
 
 	"github.com/amirhnajafiz/minions/internal/storage"
@@ -32,6 +33,8 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 
 			code = fiber.StatusCreated
 		} else {
+			log.Println(fmt.Errorf("failed to check file: %w", err))
+
 			return ctx.SendStatus(fiber.StatusNotFound)
 		}
 	}
