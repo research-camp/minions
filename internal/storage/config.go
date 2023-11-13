@@ -1,9 +1,9 @@
 package storage
 
 type Config struct {
-	Endpoint  string
-	AccessKey string
-	SecretKey string
-	Bucket    string
-	SSL       bool
+	Endpoint  string `koanf:"endpoint"`
+	AccessKey string `koanf:"access_key"`
+	SecretKey string `koanf:"secret_key"`
+	Bucket    string `koanf:"bucket"`
+	SSL       bool   `koanf:"ssl"`
 }

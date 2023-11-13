@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/minio/minio-go/v7"
 	"github.com/minio/minio-go/v7/pkg/credentials"
@@ -18,7 +19,7 @@ func New(cfg Config) (*Storage, error) {
 		Secure: cfg.SSL,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to connect to MinIO: %w", err)
 	}
 
 	return &Storage{
