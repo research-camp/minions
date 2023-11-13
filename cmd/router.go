@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/amirhnajafiz/minions/internal/metrics"
 	"log"
 
 	"github.com/amirhnajafiz/minions/internal/config"
@@ -29,9 +30,14 @@ func (r Router) main() {
 	// create new fiber
 	app := fiber.New()
 
+	// create metrics struct
+	m := metrics.Metrics{}
+	m.Init(len(cfg.Minions))
+
 	// create new handler
 	h := router.Handler{
-		Cfg: cfg,
+		Cfg:     cfg,
+		Metrics: &m,
 	}
 
 	app.Get("/get", h.Get)
