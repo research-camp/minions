@@ -1,6 +1,7 @@
 package router
 
 import (
+	"fmt"
 	"github.com/amirhnajafiz/minions/internal/config"
 	"github.com/amirhnajafiz/minions/internal/metrics"
 
@@ -19,7 +20,24 @@ func (h Handler) Get(ctx *fiber.Ctx) error {
 }
 
 func (h Handler) Put(ctx *fiber.Ctx) error {
+	form, err := ctx.MultipartForm()
+	if err != nil {
+		return fmt.Errorf("failed to get multipart form: %w", err)
+	}
+
+	url := ""
+
+	for _, file := range form.File["file"] {
+		index := len(file.Filename) % len(h.Cfg.Minions)
+
+		url = h.Cfg.Minions[index]
+	}
+
+	if len(url) == 0 {
+		return fmt.Errorf("failed to get any cache: %w", err)
+	}
+
 	h.Metrics.Up()
 
-	return nil
+	return ctx.Redirect(fmt.Sprintf("%s/upload", url))
 }
