@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+
 	"github.com/amirhnajafiz/minions/internal/config"
 	"github.com/amirhnajafiz/minions/internal/metrics"
 
@@ -14,9 +15,21 @@ type Handler struct {
 }
 
 func (h Handler) Get(ctx *fiber.Ctx) error {
+	name := ctx.Query("file", "")
+	if len(name) == 0 {
+		return ctx.SendStatus(fiber.StatusNotFound)
+	}
+
+	if len(h.Cfg.Minions) == 0 {
+		return fmt.Errorf("failed to get any cache")
+	}
+
+	index := len(name) % len(h.Cfg.Minions)
+	url := h.Cfg.Minions[index]
+
 	h.Metrics.Down()
 
-	return nil
+	return ctx.Redirect(fmt.Sprintf("%s/download", url))
 }
 
 func (h Handler) Put(ctx *fiber.Ctx) error {
