@@ -7,7 +7,7 @@ import (
 )
 
 type Handler struct {
-	MinIO storage.Storage
+	MinIO *storage.Storage
 }
 
 func (h Handler) Download(ctx *fiber.Ctx) error {

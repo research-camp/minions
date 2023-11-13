@@ -1,17 +1,18 @@
 package cmd
 
 import (
+	"fmt"
+	"log"
+
 	"github.com/amirhnajafiz/minions/internal/config"
 	"github.com/amirhnajafiz/minions/internal/http/minion"
-	"log"
+	"github.com/amirhnajafiz/minions/internal/storage"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/spf13/cobra"
 )
 
-type Minion struct {
-	Cfg config.MinionConfig
-}
+type Minion struct{}
 
 func (m Minion) Command() *cobra.Command {
 	return &cobra.Command{
@@ -23,14 +24,28 @@ func (m Minion) Command() *cobra.Command {
 }
 
 func (m Minion) main() {
+	// load configs
+	cfg := config.LoadMinion()
+
+	// create new fiber
 	app := fiber.New()
 
-	h := minion.Handler{}
+	// open connection to MinIO
+	client, err := storage.New(cfg.MinIO)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// create a new handler
+	h := minion.Handler{
+		MinIO: client,
+	}
 
 	app.Get("/download", h.Download)
 	app.Post("/upload", h.Upload)
 
-	if err := app.Listen(":80"); err != nil {
-		log.Fatal(err)
+	// start the listener
+	if er := app.Listen(fmt.Sprintf(":%d", cfg.Port)); er != nil {
+		log.Fatal(er)
 	}
 }
