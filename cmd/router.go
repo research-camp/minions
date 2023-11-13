@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/amirhnajafiz/minions/internal/config"
@@ -10,9 +11,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
-type Router struct {
-	Cfg config.RouterConfig
-}
+type Router struct{}
 
 func (r Router) Command() *cobra.Command {
 	return &cobra.Command{
@@ -24,14 +23,22 @@ func (r Router) Command() *cobra.Command {
 }
 
 func (r Router) main() {
+	// load configs
+	cfg := config.LoadRouter()
+
+	// create new fiber
 	app := fiber.New()
 
-	h := router.Handler{}
+	// create new handler
+	h := router.Handler{
+		Cfg: cfg,
+	}
 
 	app.Get("/get", h.Get)
 	app.Post("/put", h.Put)
 
-	if err := app.Listen(":80"); err != nil {
+	// start the listener
+	if err := app.Listen(fmt.Sprintf(":%d", cfg.Port)); err != nil {
 		log.Fatal(err)
 	}
 }
