@@ -3,6 +3,7 @@ package minion
 import (
 	"fmt"
 	"log"
+	"net/http"
 	"os"
 
 	"github.com/amirhnajafiz/minions/internal/storage"
@@ -13,7 +14,18 @@ import (
 const LocalDir = "./tmp/local"
 
 type Handler struct {
-	MinIO *storage.Storage
+	Router string
+	MinIO  *storage.Storage
+}
+
+func (h Handler) Notify(code string) {
+	url := fmt.Sprintf("%s?signal=%s", h.Router, code)
+	request, _ := http.NewRequest(fiber.MethodGet, url, nil)
+	client := http.Client{}
+
+	if _, err := client.Do(request); err != nil {
+		log.Println(fmt.Errorf("failed to send signal: %w", err))
+	}
 }
 
 func (h Handler) Download(ctx *fiber.Ctx) error {
@@ -22,7 +34,7 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusNotFound)
 	}
 
-	code := fiber.StatusOK
+	code := "hit"
 	path := fmt.Sprintf("%s/%s", LocalDir, name)
 
 	if _, err := os.Stat(path); err != nil {
@@ -31,7 +43,7 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 				return ctx.SendStatus(fiber.StatusInternalServerError)
 			}
 
-			code = fiber.StatusCreated
+			code = "miss"
 		} else {
 			log.Println(fmt.Errorf("failed to check file: %w", err))
 
@@ -39,7 +51,9 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 		}
 	}
 
-	return ctx.Status(code).SendFile(path)
+	go h.Notify(code)
+
+	return ctx.SendFile(path)
 }
 
 func (h Handler) Upload(ctx *fiber.Ctx) error {
