@@ -14,6 +14,19 @@ type Handler struct {
 	Metrics *metrics.Metrics
 }
 
+func (h Handler) Signal(ctx *fiber.Ctx) error {
+	key := ctx.Query("signal")
+
+	switch key {
+	case "hit":
+		h.Metrics.Hit()
+	case "miss":
+		h.Metrics.Miss()
+	}
+
+	return ctx.SendStatus(fiber.StatusOK)
+}
+
 func (h Handler) Get(ctx *fiber.Ctx) error {
 	name := ctx.Query("file", "")
 	if len(name) == 0 {

@@ -44,6 +44,7 @@ func (r Router) main() {
 	app.Get("/health", func(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusOK)
 	})
+	app.Get("/signal", h.Signal)
 
 	app.Use(logger.New(logger.Config{
 		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
