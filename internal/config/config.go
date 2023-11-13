@@ -13,3 +13,11 @@ type (
 		Minions []string `koanf:"minions"`
 	}
 )
+
+func LoadMinion() MinionConfig {
+	return DefaultMinion()
+}
+
+func LoadRouter() RouterConfig {
+	return DefaultRouter()
+}
