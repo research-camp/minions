@@ -8,6 +8,8 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
+const LocalDir = "./tmp/local"
+
 type Handler struct {
 	MinIO *storage.Storage
 }
@@ -23,11 +25,12 @@ func (h Handler) Upload(ctx *fiber.Ctx) error {
 	}
 
 	for _, file := range form.File["file"] {
-		if er := ctx.SaveFile(file, fmt.Sprintf("./%s", file.Filename)); er != nil {
+		path := fmt.Sprintf("%s/%s", LocalDir, file.Filename)
+		if er := ctx.SaveFile(file, path); er != nil {
 			return fmt.Errorf("failed to save file on local: %w", er)
 		}
 
-		if er := h.MinIO.Put(file.Filename, file.Filename); er != nil {
+		if er := h.MinIO.Put(file.Filename, path); er != nil {
 			return fmt.Errorf("failed to send on MinIo: %w", er)
 		}
 	}
