@@ -9,7 +9,7 @@ type (
 	}
 
 	RouterConfig struct {
-		MinionConfig
+		Port    int      `koanf:"port"`
 		Minions []string `koanf:"minions"`
 	}
 )
