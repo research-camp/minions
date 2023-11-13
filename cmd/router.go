@@ -9,6 +9,7 @@ import (
 	"github.com/amirhnajafiz/minions/internal/metrics"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -43,6 +44,11 @@ func (r Router) main() {
 	app.Get("/health", func(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusOK)
 	})
+
+	app.Use(logger.New(logger.Config{
+		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
+	}))
+
 	app.Get("/get", h.Get)
 	app.Post("/put", h.Put)
 
