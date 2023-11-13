@@ -2,19 +2,23 @@ package main
 
 import (
 	"github.com/amirhnajafiz/minions/cmd"
+	"log"
 
 	"github.com/spf13/cobra"
 )
 
 func main() {
+	// create the root command
 	root := &cobra.Command{}
 
+	// add sub commands
 	root.AddCommand(
 		cmd.Minion{}.Command(),
 		cmd.Router{}.Command(),
 	)
 
+	// execute root command
 	if err := root.Execute(); err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 }
