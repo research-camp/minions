@@ -2,6 +2,7 @@ package minion
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/amirhnajafiz/minions/internal/storage"
 
@@ -15,7 +16,27 @@ type Handler struct {
 }
 
 func (h Handler) Download(ctx *fiber.Ctx) error {
-	return nil
+	name := ctx.Query("file", "")
+	if len(name) == 0 {
+		return ctx.SendStatus(fiber.StatusNotFound)
+	}
+
+	code := fiber.StatusOK
+	path := fmt.Sprintf("%s/%s", LocalDir, name)
+
+	if _, err := os.Stat(path); err != nil {
+		if os.IsNotExist(err) {
+			if er := h.MinIO.Get(name, path); er != nil {
+				return ctx.SendStatus(fiber.StatusInternalServerError)
+			}
+
+			code = fiber.StatusCreated
+		} else {
+			return ctx.SendStatus(fiber.StatusNotFound)
+		}
+	}
+
+	return ctx.Status(code).SendFile(path)
 }
 
 func (h Handler) Upload(ctx *fiber.Ctx) error {
