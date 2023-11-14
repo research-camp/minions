@@ -8,6 +8,17 @@ type Metrics struct {
 	downloads int
 }
 
+func (m *Metrics) Pull() map[string]interface{} {
+	return map[string]interface{}{
+		"total_caches": m.caches,
+		"downloads":    m.downloads,
+		"uploads":      m.uploads,
+		"misses":       m.misses,
+		"hits":         m.hits,
+		"ratio":        m.hits / m.downloads,
+	}
+}
+
 func (m *Metrics) Init(caches int) {
 	m.caches = caches
 	m.hits = 0

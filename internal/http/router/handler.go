@@ -15,6 +15,10 @@ type Handler struct {
 	Metrics *metrics.Metrics
 }
 
+func (h Handler) MetricsHandler(ctx *fiber.Ctx) error {
+	return ctx.JSON(h.Metrics.Pull())
+}
+
 func (h Handler) Signal(ctx *fiber.Ctx) error {
 	key := ctx.Query("signal")
 
