@@ -2,6 +2,7 @@ package minion
 
 import (
 	"fmt"
+	"github.com/amirhnajafiz/minions/pkg/enum"
 	"log"
 	"net/http"
 	"os"
@@ -34,7 +35,7 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 		return ctx.SendStatus(fiber.StatusNotFound)
 	}
 
-	code := "hit"
+	code := enum.HitSignal
 	path := fmt.Sprintf("%s/%s", LocalDir, name)
 
 	if _, err := os.Stat(path); err != nil {
@@ -43,7 +44,7 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 				return ctx.SendStatus(fiber.StatusInternalServerError)
 			}
 
-			code = "miss"
+			code = enum.MissSignal
 		} else {
 			log.Println(fmt.Errorf("failed to check file: %w", err))
 

@@ -2,6 +2,7 @@ package router
 
 import (
 	"fmt"
+	"github.com/amirhnajafiz/minions/pkg/enum"
 
 	"github.com/amirhnajafiz/minions/internal/config"
 	"github.com/amirhnajafiz/minions/internal/metrics"
@@ -18,9 +19,9 @@ func (h Handler) Signal(ctx *fiber.Ctx) error {
 	key := ctx.Query("signal")
 
 	switch key {
-	case "hit":
+	case enum.HitSignal:
 		h.Metrics.Hit()
-	case "miss":
+	case enum.MissSignal:
 		h.Metrics.Miss()
 	}
 
