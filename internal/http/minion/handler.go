@@ -21,6 +21,6 @@ func (h Handler) Register(app *fiber.App) {
 		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
 	}))
 
-	app.Get("/download", h.Download)
-	app.Post("/upload", h.Upload)
+	app.Get("/download", h.download)
+	app.Post("/upload", h.upload)
 }

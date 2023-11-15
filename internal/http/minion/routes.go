@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h Handler) Notify(code string) {
+func (h Handler) notify(code string) {
 	url := fmt.Sprintf("%s?signal=%s", h.Router, code)
 	request, _ := http.NewRequest(fiber.MethodGet, url, nil)
 	client := http.Client{}
@@ -21,7 +21,7 @@ func (h Handler) Notify(code string) {
 	}
 }
 
-func (h Handler) Download(ctx *fiber.Ctx) error {
+func (h Handler) download(ctx *fiber.Ctx) error {
 	name := ctx.Query("file", "")
 	if len(name) == 0 {
 		return ctx.SendStatus(fiber.StatusNotFound)
@@ -44,12 +44,12 @@ func (h Handler) Download(ctx *fiber.Ctx) error {
 		}
 	}
 
-	go h.Notify(code)
+	go h.notify(code)
 
 	return ctx.SendFile(path)
 }
 
-func (h Handler) Upload(ctx *fiber.Ctx) error {
+func (h Handler) upload(ctx *fiber.Ctx) error {
 	form, err := ctx.MultipartForm()
 	if err != nil {
 		return fmt.Errorf("failed to get multipart form: %w", err)

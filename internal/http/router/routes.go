@@ -8,11 +8,11 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h Handler) MetricsHandler(ctx *fiber.Ctx) error {
+func (h Handler) metricsHandler(ctx *fiber.Ctx) error {
 	return ctx.JSON(h.Metrics.Pull())
 }
 
-func (h Handler) Signal(ctx *fiber.Ctx) error {
+func (h Handler) signal(ctx *fiber.Ctx) error {
 	key := ctx.Query("signal")
 
 	switch key {
@@ -25,7 +25,7 @@ func (h Handler) Signal(ctx *fiber.Ctx) error {
 	return ctx.SendStatus(fiber.StatusOK)
 }
 
-func (h Handler) Get(ctx *fiber.Ctx) error {
+func (h Handler) get(ctx *fiber.Ctx) error {
 	name := ctx.Query("file", "")
 	if len(name) == 0 {
 		return ctx.SendStatus(fiber.StatusNotFound)
@@ -43,7 +43,7 @@ func (h Handler) Get(ctx *fiber.Ctx) error {
 	return ctx.Redirect(fmt.Sprintf("%s/download", url))
 }
 
-func (h Handler) Put(ctx *fiber.Ctx) error {
+func (h Handler) put(ctx *fiber.Ctx) error {
 	form, err := ctx.MultipartForm()
 	if err != nil {
 		return fmt.Errorf("failed to get multipart form: %w", err)
