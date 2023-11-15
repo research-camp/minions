@@ -9,7 +9,6 @@ import (
 	"github.com/amirhnajafiz/minions/internal/storage"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -38,20 +37,9 @@ func (m Minion) main() {
 	}
 
 	// create a new handler
-	h := minion.Handler{
+	minion.Handler{
 		MinIO: client,
-	}
-
-	app.Get("/health", func(ctx *fiber.Ctx) error {
-		return ctx.SendStatus(fiber.StatusOK)
-	})
-
-	app.Use(logger.New(logger.Config{
-		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
-	}))
-
-	app.Get("/download", h.Download)
-	app.Post("/upload", h.Upload)
+	}.Register(app)
 
 	// start the listener
 	if er := app.Listen(fmt.Sprintf(":%d", cfg.Port)); er != nil {
