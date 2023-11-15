@@ -2,10 +2,10 @@ package router
 
 import (
 	"fmt"
-	"github.com/amirhnajafiz/minions/pkg/enum"
 
 	"github.com/amirhnajafiz/minions/internal/config"
 	"github.com/amirhnajafiz/minions/internal/metrics"
+	"github.com/amirhnajafiz/minions/pkg/enum"
 
 	"github.com/gofiber/fiber/v2"
 )

@@ -2,12 +2,12 @@ package minion
 
 import (
 	"fmt"
-	"github.com/amirhnajafiz/minions/pkg/enum"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/amirhnajafiz/minions/internal/storage"
+	"github.com/amirhnajafiz/minions/pkg/enum"
 
 	"github.com/gofiber/fiber/v2"
 )
