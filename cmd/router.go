@@ -9,7 +9,6 @@ import (
 	"github.com/amirhnajafiz/minions/internal/metrics"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/spf13/cobra"
 )
 
@@ -36,22 +35,10 @@ func (r Router) main() {
 	m.Init(len(cfg.Minions))
 
 	// create new handler
-	h := router.Handler{
+	router.Handler{
 		Cfg:     cfg,
 		Metrics: &m,
-	}
-
-	app.Get("/health", func(ctx *fiber.Ctx) error {
-		return ctx.SendStatus(fiber.StatusOK)
-	})
-	app.Get("/", h.Signal)
-
-	app.Use(logger.New(logger.Config{
-		Format: "[${ip}]:${port} ${status} - ${method} ${path}\n",
-	}))
-
-	app.Get("/get", h.Get)
-	app.Post("/put", h.Put)
+	}.Register(app)
 
 	// start the listener
 	if err := app.Listen(fmt.Sprintf(":%d", cfg.Port)); err != nil {
