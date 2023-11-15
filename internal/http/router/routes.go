@@ -13,7 +13,7 @@ func (h Handler) metricsHandler(ctx *fiber.Ctx) error {
 }
 
 func (h Handler) signal(ctx *fiber.Ctx) error {
-	key := ctx.Query("signal")
+	key := enum.Signal(ctx.Query("signal"))
 
 	switch key {
 	case enum.HitSignal:

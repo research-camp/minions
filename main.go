@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/amirhnajafiz/minions/cmd"
 	"log"
+
+	"github.com/amirhnajafiz/minions/cmd"
 
 	"github.com/spf13/cobra"
 )

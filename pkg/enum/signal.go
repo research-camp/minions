@@ -1,6 +1,8 @@
 package enum
 
+type Signal string
+
 const (
-	HitSignal  = "hit"
-	MissSignal = "miss"
+	HitSignal  Signal = "hit"
+	MissSignal Signal = "miss"
 )

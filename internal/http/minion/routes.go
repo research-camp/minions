@@ -11,7 +11,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func (h Handler) notify(code string) {
+func (h Handler) notify(code enum.Signal) {
 	url := fmt.Sprintf("%s?signal=%s", h.Router, code)
 	request, _ := http.NewRequest(fiber.MethodGet, url, nil)
 	client := http.Client{}
