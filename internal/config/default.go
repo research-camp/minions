@@ -11,7 +11,8 @@ func DefaultRouter() RouterConfig {
 
 func DefaultMinion() MinionConfig {
 	return MinionConfig{
-		Port: 80,
+		Port:   80,
+		Router: "",
 		MinIO: storage.Config{
 			Endpoint:  "",
 			AccessKey: "",
