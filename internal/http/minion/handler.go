@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/amirhnajafiz/minions/internal/storage"
 	"github.com/amirhnajafiz/minions/pkg/enum"
 
 	"github.com/gofiber/fiber/v2"
@@ -16,7 +15,7 @@ const LocalDir = "./tmp/local"
 
 type Handler struct {
 	Router string
-	MinIO  *storage.Storage
+	MinIO  MinIO
 }
 
 func (h Handler) Notify(code string) {
