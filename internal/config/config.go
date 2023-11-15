@@ -1,6 +1,12 @@
 package config
 
-import "github.com/amirhnajafiz/minions/internal/storage"
+import (
+	"os"
+	"strconv"
+	"strings"
+
+	"github.com/amirhnajafiz/minions/internal/storage"
+)
 
 type (
 	MinionConfig struct {
@@ -16,9 +22,16 @@ type (
 )
 
 func LoadMinion() MinionConfig {
-	return DefaultMinion()
+	cfg := DefaultMinion()
+
+	return cfg
 }
 
 func LoadRouter() RouterConfig {
-	return DefaultRouter()
+	cfg := DefaultRouter()
+
+	cfg.Port, _ = strconv.Atoi(os.Getenv("MI_PORT"))
+	cfg.Minions = strings.Split(os.Getenv("MI_MINIONS"), ",")
+
+	return cfg
 }
