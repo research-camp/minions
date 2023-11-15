@@ -4,7 +4,6 @@ import (
 	"fmt"
 
 	"github.com/amirhnajafiz/minions/internal/config"
-	"github.com/amirhnajafiz/minions/internal/metrics"
 	"github.com/amirhnajafiz/minions/pkg/enum"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +11,7 @@ import (
 
 type Handler struct {
 	Cfg     config.RouterConfig
-	Metrics *metrics.Metrics
+	Metrics Metrics
 }
 
 func (h Handler) MetricsHandler(ctx *fiber.Ctx) error {
