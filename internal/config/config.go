@@ -4,14 +4,14 @@ import "github.com/amirhnajafiz/minions/internal/storage"
 
 type (
 	MinionConfig struct {
-		Port   int            `koanf:"port"`
-		Router string         `koanf:"router"`
-		MinIO  storage.Config `koanf:"minio"`
+		Port   int
+		Router string
+		MinIO  storage.Config
 	}
 
 	RouterConfig struct {
-		Port    int      `koanf:"port"`
-		Minions []string `koanf:"minions"`
+		Port    int
+		Minions []string
 	}
 )
 
