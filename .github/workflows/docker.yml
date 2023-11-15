@@ -1,0 +1,48 @@
+name: docker release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  DOCKER_USER: ${{ secrets.DOCKER_USER }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  REPO_NAME: ${{ secrets.REPO_NAME }}
+
+jobs:
+  push_to_registry:
+    name: Push Docker image to Docker Hub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Set output
+        id: vars
+        run: echo "tag=${GITHUB_REF#refs/*/}" >> $GITHUB_OUTPUT
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ env.DOCKER_USER }}
+          password: ${{ env.DOCKER_PASSWORD }}
+
+      - name: Set up Docker BuildX
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build and push router Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./build/router.Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:router-${{ steps.vars.outputs.tag }}
+
+      - name: Build and push minion Docker image
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          file: ./build/minion.Dockerfile
+          push: true
+          tags: ${{ env.DOCKER_USER }}/${{ env.REPO_NAME }}:minion-${{ steps.vars.outputs.tag }}
