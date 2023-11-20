@@ -5,10 +5,14 @@ import (
 
 	"github.com/amirhnajafiz/minions/cmd"
 
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 )
 
 func main() {
+	// load env file if existed
+	_ = godotenv.Load()
+
 	// create the root command
 	root := &cobra.Command{}
 
